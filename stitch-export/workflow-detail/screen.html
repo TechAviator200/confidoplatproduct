@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Confido Workspace - Workflow Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#004ac6",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-surface": "#191c1d",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa",
+                        "surface-bright": "#f8f9fa",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "outline": "#737686",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#d9dff5",
+                        "on-secondary-fixed-variant": "#404758",
+                        "primary-container": "#2563eb",
+                        "secondary": "#575e70",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary-fixed-variant": "#404754",
+                        "on-primary-fixed": "#00174b",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-container": "#5c6274",
+                        "on-background": "#191c1d",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "tertiary": "#4e5562",
+                        "on-tertiary-fixed": "#151c27",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#d9dadb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#dce2f7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#666d7b",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-tertiary-container": "#eaf0ff",
+                        "tertiary-fixed-dim": "#c0c7d6",
+                        "tertiary-fixed": "#dce2f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "2rem",
+                        "panel-padding": "1.5rem",
+                        "table-cell-padding": "0.75rem 1rem",
+                        "gutter": "1rem",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "code": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["18px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #f8f9fa; color: #191c1d; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .node-connector { position: absolute; border: 1px dashed #c3c6d7; z-index: 0; }
+        .dense-table th { @apply font-label-md text-label-md uppercase tracking-wider text-on-surface-variant py-2 px-3 border-b border-outline-variant text-left; }
+        .dense-table td { @apply font-body-sm text-body-sm py-2 px-3 border-b border-outline-variant; }
+        .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+        .canvas-bg { background-image: radial-gradient(#c3c6d7 1px, transparent 1px); background-size: 20px 20px; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid #E5E7EB; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-panel-padding h-16 sticky top-0 z-50 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-outline-variant dark:border-outline-variant flat no shadows">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Confido Workspace</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-label-md text-label-md text-on-surface-variant">Riverbend Gastroenterology</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-[10px] font-bold">RB</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- NavigationDrawer -->
+<aside class="hidden md:flex flex-col h-full w-64 fixed left-0 top-16 bg-surface dark:bg-surface border-r border-outline-variant dark:border-outline-variant p-4 gap-2 z-40">
+<div class="flex items-center gap-3 px-2 py-4 mb-4 border-b border-outline-variant">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">FDE Workspace</p>
+<p class="text-[10px] text-on-surface-variant">Confido Workflow</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="font-label-md text-label-md">Decomposition</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">science</span>
+<span class="font-label-md text-label-md">Experiments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="font-label-md text-label-md">Lifecycle</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">event_note</span>
+<span class="font-label-md text-label-md">Roadmap</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-lg font-bold" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="font-label-md text-label-md">Detail</span>
+</a>
+</nav>
+<div class="mt-auto p-2">
+<span class="text-[10px] font-code text-outline uppercase tracking-widest">v2.4.0</span>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-panel-padding overflow-y-auto">
+<!-- Page Header / Overview -->
+<div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+<div>
+<nav class="flex gap-2 text-[10px] text-outline uppercase tracking-widest mb-2">
+<span>Workspaces</span>
+<span>/</span>
+<span class="text-primary font-bold">Riverbend Gastroenterology</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Workflow Detail: Intake Automation</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-2xl">High-fidelity clinical ingestion workflow with deterministic routing and LLM-assisted knowledge extraction for patient pre-authorizations.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">play_circle</span>
+                        Simulate
+                    </button>
+<button class="px-4 py-2 bg-primary text-white font-label-md text-label-md rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+                        Promote to Prod
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="bento-grid">
+<!-- Platform Readiness Score (Top-right small card) -->
+<div class="col-span-12 lg:col-span-4 glass-panel p-panel-padding rounded-xl flex flex-col justify-between shadow-sm border-l-4 border-l-primary">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md uppercase text-on-surface-variant">Platform Readiness</span>
+<span class="text-primary font-bold font-headline-md">94%</span>
+</div>
+<div class="mt-4 bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+<div class="mt-6">
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">"Workflow matches 100% of Riverbend clinic configurations. 3 minor tool-call latencies detected."</p>
+</div>
+<div class="mt-4 flex gap-2">
+<span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase">Secure</span>
+<span class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase">Scalable</span>
+</div>
+</div>
+<!-- Workflow Diagram (Center Piece) -->
+<div class="col-span-12 lg:col-span-8 bg-white border border-outline-variant rounded-xl shadow-sm relative overflow-hidden min-h-[400px] canvas-bg">
+<div class="absolute top-4 left-4 z-10">
+<h3 class="font-label-md text-label-md uppercase text-on-surface-variant">Architecture Graph</h3>
+</div>
+<div class="absolute inset-0 flex items-center justify-center p-8">
+<!-- Simplified SVG Diagram for Architecture -->
+<div class="w-full h-full relative flex items-center justify-center">
+<!-- Node 1: Entry -->
+<div class="absolute left-8 top-1/2 -translate-y-1/2 w-32 h-20 bg-white border-2 border-primary rounded-lg flex flex-col items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-primary mb-1">input</span>
+<span class="text-[11px] font-bold">API Gateway</span>
+</div>
+<!-- Connector -->
+<div class="absolute left-40 top-1/2 w-16 h-0 border-t-2 border-primary/20 z-0"></div>
+<!-- Node 2: Logic -->
+<div class="absolute left-[200px] top-1/2 -translate-y-1/2 w-48 h-32 bg-surface-container-lowest border-2 border-primary rounded-xl flex flex-col p-3 z-10 shadow-md">
+<div class="flex justify-between mb-2">
+<span class="text-[10px] font-bold text-primary uppercase">Main Router</span>
+<span class="material-symbols-outlined text-[14px] text-primary">memory</span>
+</div>
+<div class="space-y-1">
+<div class="h-4 bg-surface-container rounded px-2 text-[9px] flex items-center">IF valid_json THEN 2a</div>
+<div class="h-4 bg-surface-container rounded px-2 text-[9px] flex items-center">ELSE retry_schema</div>
+</div>
+</div>
+<!-- Connectors -->
+<div class="absolute left-[392px] top-1/2 w-12 h-0 border-t-2 border-primary/20 z-0"></div>
+<div class="absolute left-[440px] top-[30%] w-0 h-[40%] border-l-2 border-primary/20 z-0"></div>
+<!-- Node 3: LLM Engine -->
+<div class="absolute left-[440px] top-[15%] w-40 h-20 bg-primary text-white rounded-lg flex flex-col items-center justify-center z-10 shadow-lg">
+<span class="material-symbols-outlined mb-1">psychology</span>
+<span class="text-[11px] font-bold">Knowledge Extract</span>
+</div>
+<!-- Node 4: Validation -->
+<div class="absolute left-[440px] top-[65%] w-40 h-20 bg-white border border-outline-variant rounded-lg flex flex-col items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant mb-1">check_circle</span>
+<span class="text-[11px] font-bold">Schema Validation</span>
+</div>
+<!-- Node 5: Success Output -->
+<div class="absolute right-8 top-1/2 -translate-y-1/2 w-32 h-20 bg-green-50 border-2 border-green-500 rounded-lg flex flex-col items-center justify-center z-10 shadow-sm">
+<span class="material-symbols-outlined text-green-600 mb-1">output</span>
+<span class="text-[11px] font-bold text-green-800">Final Manifest</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Business Rules & Deterministic Rules -->
+<div class="col-span-12 md:col-span-6 glass-panel p- panel-padding rounded-xl">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-[20px]">rule</span>
+<h3 class="font-headline-md text-headline-md">Business & Deterministic Rules</h3>
+</div>
+<div class="space-y-3">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md font-bold">Rule ID: BR-041</span>
+<span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">DETERMINISTIC</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">If patient age > 65 AND insurer is Medicare, set priority to P1 and bypass secondary LLM screening.</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md font-bold">Rule ID: BR-042</span>
+<span class="px-2 py-0.5 bg-purple-100 text-purple-800 text-[10px] font-bold rounded">HEURISTIC</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Compare historical pre-auth success rates for provider NPI. Flag for manual review if < 15%.</p>
+</div>
+</div>
+<button class="mt-4 w-full py-2 border border-dashed border-outline-variant rounded-lg text-label-md font-label-md text-outline hover:border-primary hover:text-primary transition-all">
+                        + Add Rule
+                    </button>
+</div>
+<!-- Knowledge Base Usage & Tool Calls -->
+<div class="col-span-12 md:col-span-6 bg-white border border-outline-variant rounded-xl p-panel-padding shadow-sm">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-[20px]">database</span>
+<h3 class="font-headline-md text-headline-md">Integration & Tool Calls</h3>
+</div>
+<table class="w-full dense-table">
+<thead>
+<tr>
+<th>Service</th>
+<th>Action</th>
+<th>Latency</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="font-bold">ClinicalDB</td>
+<td class="font-code">fetch_patient_history</td>
+<td>142ms</td>
+<td><span class="text-green-600">● 200 OK</span></td>
+</tr>
+<tr>
+<td class="font-bold">LLM-04</td>
+<td class="font-code">summarize_pathology</td>
+<td>1240ms</td>
+<td><span class="text-green-600">● 200 OK</span></td>
+</tr>
+<tr>
+<td class="font-bold">EHR-Sync</td>
+<td class="font-code">update_workflow_state</td>
+<td>410ms</td>
+<td><span class="text-orange-600">● 429 Retry</span></td>
+</tr>
+</tbody>
+</table>
+<div class="mt-4 p-3 bg-surface-container rounded-lg">
+<p class="text-[11px] font-code text-on-surface-variant leading-relaxed">
+<span class="text-primary">KB-Mount:</span> clinical-guidelines-2024.v3<br/>
+<span class="text-primary">Chunks:</span> 4.2k vector embeddings<br/>
+<span class="text-primary">Top-K:</span> 5 segments / query
+                        </p>
+</div>
+</div>
+<!-- Validation Results (Full Width Table) -->
+<div class="col-span-12 bg-white border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md">Latest Validation Results (Stage 3)</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary-container text-white text-[10px] font-bold rounded-full">Passed: 124</span>
+<span class="px-3 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">Failed: 2</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full dense-table">
+<thead>
+<tr class="bg-surface">
+<th>Test Case ID</th>
+<th>Input Sample</th>
+<th>Expected Action</th>
+<th>Actual Result</th>
+<th>Similarity</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="font-code">TC-VAL-001</td>
+<td>Normal Intake Flow</td>
+<td>Direct Ingestion</td>
+<td>Direct Ingestion</td>
+<td>0.992</td>
+<td><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold">PASS</span></td>
+</tr>
+<tr>
+<td class="font-code">TC-VAL-002</td>
+<td>Missing NPI data</td>
+<td>Route to Retry</td>
+<td>Route to Retry</td>
+<td>1.000</td>
+<td><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold">PASS</span></td>
+</tr>
+<tr>
+<td class="font-code">TC-VAL-003</td>
+<td>Conflicting Payer</td>
+<td>Flag Conflict</td>
+<td>No Flag (Passed)</td>
+<td>0.450</td>
+<td><span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-bold">FAIL</span></td>
+</tr>
+<tr>
+<td class="font-code">TC-VAL-004</td>
+<td>Incomplete Pathology</td>
+<td>Trigger Clarification</td>
+<td>Trigger Clarification</td>
+<td>0.887</td>
+<td><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold">PASS</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recommendation & Clinic Configurations (Asymmetric) -->
+<div class="col-span-12 lg:col-span-9 bg-primary text-white p-panel-padding rounded-xl flex flex-col md:flex-row gap-6 relative overflow-hidden">
+<div class="absolute right-0 top-0 opacity-10">
+<span class="material-symbols-outlined text-[160px]">lightbulb</span>
+</div>
+<div class="relative z-10 flex-1">
+<h3 class="font-headline-md text-headline-md mb-2">Architect Recommendation</h3>
+<p class="font-body-md text-body-md opacity-90 max-w-xl">
+                            The "Intake Automation" workflow is highly stable for the Riverbend Gastroenterology pilot. However, we recommend migrating from <span class="font-code font-bold underline">LLM-04-Standard</span> to <span class="font-code font-bold underline">LLM-04-Clinical-Optimized</span> to reduce tool-call latency by ~30% in the pathology summarization step.
+                        </p>
+<button class="mt-6 px-4 py-2 bg-white text-primary font-label-md text-label-md rounded-lg hover:bg-opacity-90 transition-all font-bold">Apply Optimization</button>
+</div>
+</div>
+<!-- Reusable Components & Clinic Sidebar (Simulated as content block) -->
+<div class="col-span-12 lg:col-span-3 space-y-4">
+<div class="bg-white border border-outline-variant rounded-xl p-4 shadow-sm">
+<h4 class="font-label-md text-label-md uppercase text-on-surface-variant mb-3">Reusable Components</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 hover:bg-surface-container rounded cursor-pointer transition-colors">
+<span class="text-body-sm font-body-sm">PayerMatch_Logic.js</span>
+<span class="material-symbols-outlined text-[16px] text-outline">file_copy</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container rounded cursor-pointer transition-colors">
+<span class="text-body-sm font-body-sm">NPI_Validator.v2</span>
+<span class="material-symbols-outlined text-[16px] text-outline">file_copy</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container rounded cursor-pointer transition-colors">
+<span class="text-body-sm font-body-sm">AuthResponse_Template</span>
+<span class="material-symbols-outlined text-[16px] text-outline">file_copy</span>
+</div>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl p-4 shadow-sm">
+<h4 class="font-label-md text-label-md uppercase text-on-surface-variant mb-3">Clinic Exceptions</h4>
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-orange-400"></div>
+<span class="text-body-sm font-body-sm">Westside Branch: No Medicare</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-blue-400"></div>
+<span class="text-body-sm font-body-sm">East-Side: Paper Backup</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Spacer for Fixed Nav on Mobile -->
+<div class="h-20 md:hidden"></div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline-variant shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">account_tree</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full w-12 h-12 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">description</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<!-- Floating Action Button (FAB) - Contextual for Detail Screen -->
+<div class="fixed bottom-24 right-8 z-50 md:bottom-8 md:right-8 group">
+<button class="w-14 h-14 bg-primary text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-[28px]">edit</span>
+</button>
+<div class="absolute bottom-16 right-0 scale-0 group-hover:scale-100 origin-bottom-right transition-all flex flex-col gap-2 items-end">
+<span class="px-3 py-1 bg-white border border-outline-variant rounded-lg shadow-sm text-label-md font-label-md whitespace-nowrap">Edit Rules</span>
+<span class="px-3 py-1 bg-white border border-outline-variant rounded-lg shadow-sm text-label-md font-label-md whitespace-nowrap">Re-Validate</span>
+</div>
+</div>
+<script>
+        // Micro-interaction for diagram highlighting
+        document.querySelectorAll('.absolute.z-10').forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                node.style.borderColor = '#2563eb';
+                node.style.transform = 'translateY(-2px) scale(1.02)';
+                node.style.transition = 'all 0.2s ease-in-out';
+            });
+            node.addEventListener('mouseleave', () => {
+                node.style.borderColor = '';
+                node.style.transform = '';
+            });
+        });
+    </script>
+</body></html>

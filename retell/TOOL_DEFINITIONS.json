@@ -1,0 +1,377 @@
+{
+  "_meta": {
+    "status": "mock/local — not yet hosted",
+    "note": "These tool definitions describe the contract a hosted stub would need to satisfy so a Retell agent can call it. No endpoint is live yet; nothing here has a real 'url'. The 'mapped_typescript_function' field under each tool's 'documentation' points to the Phase 1 TypeScript function that already implements the underlying logic locally (see tools/). Several of these TypeScript functions take a resolved PatientRecord rather than a raw phone number, because they were built to be composed by other TypeScript code (see bookAppointment.ts, rescheduleAppointment.ts, cancelAppointment.ts, confirmAppointment.ts). A hosted version of this tool layer would need a thin adapter in front of those functions that re-resolves the patient from phone + dob_confirmation before calling them — that adapter does not exist yet and is explicitly not built in this pass (no backend refactor). This file specifies the caller-facing (Retell-facing) contract those adapters would need to satisfy.",
+    "sources": [
+      "retell/AGENT_BEHAVIOR.md",
+      "SOURCE_MAP.md",
+      "DECISIONS.md",
+      "tools/",
+      "clinic-config/"
+    ]
+  },
+  "tools": [
+    {
+      "name": "lookup_patient",
+      "description": "Looks up a patient by phone number and confirms identity with date of birth. Must be called with both fields together before any appointment detail is discussed or changed — phone number alone is never sufficient (D1). Does not require identity verification itself to be called (it IS the verification step).",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": false,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string", "description": "Caller's phone number, e.g. \"555-0101\"." },
+          "dob_confirmation": { "type": "string", "description": "Caller-stated date of birth, ISO format YYYY-MM-DD." }
+        },
+        "required": ["phone", "dob_confirmation"]
+      },
+      "documentation": {
+        "example_request": { "phone": "555-0101", "dob_confirmation": "1958-02-10" },
+        "example_success_response": {
+          "status": "verified",
+          "patient": {
+            "phone": "555-0101",
+            "name": "Margaret Hill",
+            "dob": "1958-02-10",
+            "insurance": { "payer": "Aetna", "active": true },
+            "last_seen": "2025-09-12",
+            "assigned_provider": "whitfield",
+            "flags": []
+          }
+        },
+        "example_failure_response": { "status": "dob_mismatch" },
+        "example_failure_response_alt": { "status": "not_found" },
+        "mapped_typescript_function": "tools/contracts/lookupPatient.ts#lookupPatient"
+      }
+    },
+    {
+      "name": "run_scheduling_workflow",
+      "description": "Runs identity verification plus the full deterministic eligibility pipeline (classification, age, insurance, provider continuity, discharge check) for a new-booking intent. Stops at the first failed check. Returns whether the caller is eligible to schedule, needs a front-desk transfer, or is ineligible with a reason. Does not search availability or book anything — call get_availability and book_appointment afterward if the outcome is eligible.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": true,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string", "description": "Caller's phone number." },
+          "dob_confirmation": { "type": "string", "description": "Caller-stated date of birth, ISO YYYY-MM-DD." },
+          "has_policy_number_confirmed": { "type": "boolean", "description": "Whether the caller confirmed they have their insurance card / policy number available (Rule 3)." },
+          "requested_provider": {
+            "type": ["string", "null"],
+            "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez", null],
+            "description": "Provider the caller asked for, or null if no preference stated."
+          },
+          "requested_day": {
+            "type": "string",
+            "enum": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+            "description": "Only relevant if requested_provider is \"crane\" — Dr. Crane himself is only bookable on Thursdays (Rule 6)."
+          }
+        },
+        "required": ["phone", "dob_confirmation", "has_policy_number_confirmed"],
+        "optional": ["requested_provider", "requested_day"]
+      },
+      "documentation": {
+        "example_request": {
+          "phone": "555-0102",
+          "dob_confirmation": "1971-07-04",
+          "has_policy_number_confirmed": true,
+          "requested_provider": null
+        },
+        "example_success_response": {
+          "outcome": "eligible",
+          "classification": "follow_up",
+          "routed_provider": "raman",
+          "patient": { "phone": "555-0102", "name": "James Porter" }
+        },
+        "example_failure_response": {
+          "outcome": "ineligible",
+          "reason": "Riverbend Rule 3: insurance on file is not active."
+        },
+        "example_failure_response_alt": {
+          "outcome": "transfer_required",
+          "reason": "Riverbend Rule 5: switching to a different provider requires office approval first."
+        },
+        "mapped_typescript_function": "tools/contracts/runSchedulingWorkflow.ts#runSchedulingWorkflow"
+      }
+    },
+    {
+      "name": "get_availability",
+      "description": "Returns the visit duration and the soonest available slots (soonest-first) for a given provider and patient classification. Call this only after run_scheduling_workflow returns an eligible outcome, using its routed_provider and classification.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": true,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez"],
+            "description": "The routed provider id from run_scheduling_workflow."
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["new_patient", "follow_up"],
+            "description": "Determines visit duration: 30 minutes for new_patient, 15 for follow_up (Rule 2)."
+          },
+          "days_to_search": { "type": "integer", "description": "How many calendar days forward to search. Defaults to 21." },
+          "max_slots": { "type": "integer", "description": "How many slots to return. Defaults to 3." }
+        },
+        "required": ["provider", "classification"],
+        "optional": ["days_to_search", "max_slots"]
+      },
+      "documentation": {
+        "example_request": { "provider": "raman", "classification": "follow_up" },
+        "example_success_response": {
+          "duration_minutes": 15,
+          "slots": [
+            { "date": "2026-07-20", "weekday": "Mon", "time": "09:00", "provider": "raman", "location": "lakeside" },
+            { "date": "2026-07-22", "weekday": "Wed", "time": "09:00", "provider": "raman", "location": "lakeside" },
+            { "date": "2026-07-23", "weekday": "Thu", "time": "09:00", "provider": "raman", "location": "lakeside" }
+          ]
+        },
+        "example_failure_response": {
+          "error": "unknown provider",
+          "note": "The current implementation throws on an invalid provider id rather than returning a structured error. A hosted adapter should catch this and translate it into a tool-call error response — not yet built."
+        },
+        "mapped_typescript_function": "tools/contracts/getAvailability.ts#getAvailability"
+      }
+    },
+    {
+      "name": "book_appointment",
+      "description": "Books a new appointment for an already-verified, already-eligible patient. Should only be called after run_scheduling_workflow returned eligible and get_availability returned a slot. Always confirm the slot with the caller before calling this. Pass the confirmed slot object from get_availability in selected_slot — copy it exactly, do not reconstruct it.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": true,
+      "speak_after_execution": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string", "description": "Caller's phone number (used to re-resolve the verified patient)." },
+          "dob_confirmation": { "type": "string", "description": "Caller-stated date of birth, ISO YYYY-MM-DD." },
+          "has_policy_number_confirmed": { "type": "boolean" },
+          "selected_slot": {
+            "type": "object",
+            "description": "The exact slot the caller confirmed, copied verbatim from the get_availability response. This is the single source of truth for what gets booked — do not reconstruct any fields from the conversation. The slot object from get_availability already contains provider; copy the whole object as-is.",
+            "properties": {
+              "date": { "type": "string", "description": "ISO date YYYY-MM-DD, from get_availability." },
+              "weekday": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri"] },
+              "time": { "type": "string", "description": "24-hour HH:MM, from get_availability." },
+              "provider": { "type": "string", "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez"], "description": "Provider id, from get_availability." },
+              "location": { "type": "string", "enum": ["maple_grove", "lakeside"] }
+            },
+            "required": ["date", "weekday", "provider", "location"]
+          },
+          "requested_provider": {
+            "type": ["string", "null"],
+            "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez", null]
+          },
+          "requested_day": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri"] }
+        },
+        "required": ["phone", "dob_confirmation", "has_policy_number_confirmed", "selected_slot"],
+        "optional": ["requested_provider", "requested_day"]
+      },
+      "documentation": {
+        "example_request": {
+          "phone": "555-0102",
+          "dob_confirmation": "1971-07-04",
+          "has_policy_number_confirmed": true,
+          "selected_slot": { "date": "2026-07-20", "weekday": "Mon", "time": "09:00", "provider": "raman", "location": "lakeside" },
+          "requested_provider": null
+        },
+        "example_success_response": {
+          "status": "booked",
+          "provider": "raman",
+          "duration_minutes": 15,
+          "slot": { "date": "2026-07-20", "weekday": "Mon", "time": "09:00", "provider": "raman", "location": "lakeside" }
+        },
+        "example_failure_response": {
+          "status": "blocked",
+          "reason": "Riverbend Rule 4: patients under 18 are not seen by this practice."
+        },
+        "mapped_typescript_function": "tools/contracts/bookAppointment.ts#bookAppointment",
+        "adapter_note": "bookAppointment.ts expects a resolved PatientRecord, not a phone number. A hosted stub would call lookupPatient.ts internally first, then pass the resolved patient into bookAppointment.ts. This adapter is not yet written."
+      }
+    },
+    {
+      "name": "get_existing_appointment",
+      "description": "Read-only lookup of a caller's existing upcoming appointment, used silently before offering a reschedule or cancel flow so the agent knows whether one exists before asking what to change.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": false,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string" },
+          "dob_confirmation": { "type": "string", "description": "ISO YYYY-MM-DD." }
+        },
+        "required": ["phone", "dob_confirmation"]
+      },
+      "documentation": {
+        "example_request": { "phone": "555-0101", "dob_confirmation": "1958-02-10" },
+        "example_success_response": {
+          "status": "confirmed",
+          "provider": "Dr. Alan Whitfield, MD",
+          "location": "maple_grove",
+          "datetime": "2026-07-28T09:30:00"
+        },
+        "example_failure_response": { "status": "not_found" },
+        "mapped_typescript_function": "tools/contracts/confirmAppointment.ts#confirmAppointment",
+        "note": "There is no dedicated getExistingAppointment TypeScript function. This Retell tool reuses the same underlying operation as confirm_appointment below — the two tool names exist for two different conversational triggers (silent pre-check vs. an explicit caller request to confirm), not because the logic differs."
+      }
+    },
+    {
+      "name": "reschedule_appointment",
+      "description": "Reschedules an existing appointment. Requires an appointment to already exist (check with get_existing_appointment first) and requires the same eligibility pipeline as booking, since Rule 8 blocks reschedules for discharged patients too (D6). Pass the confirmed slot from get_availability in selected_slot.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": true,
+      "speak_after_execution": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string" },
+          "dob_confirmation": { "type": "string", "description": "ISO YYYY-MM-DD." },
+          "has_policy_number_confirmed": { "type": "boolean" },
+          "selected_slot": {
+            "type": "object",
+            "description": "The exact slot the caller confirmed, copied verbatim from the get_availability response.",
+            "properties": {
+              "date": { "type": "string", "description": "ISO date YYYY-MM-DD, from get_availability." },
+              "weekday": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri"] },
+              "time": { "type": "string", "description": "24-hour HH:MM, from get_availability." },
+              "provider": { "type": "string", "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez"], "description": "Provider id, from get_availability." },
+              "location": { "type": "string", "enum": ["maple_grove", "lakeside"] }
+            },
+            "required": ["date", "weekday", "provider", "location"]
+          },
+          "requested_provider": {
+            "type": ["string", "null"],
+            "enum": ["whitfield", "brooks", "raman", "ellis", "crane", "mendez", null]
+          },
+          "requested_day": { "type": "string", "enum": ["Mon", "Tue", "Wed", "Thu", "Fri"] }
+        },
+        "required": ["phone", "dob_confirmation", "has_policy_number_confirmed", "selected_slot"],
+        "optional": ["requested_provider", "requested_day"]
+      },
+      "documentation": {
+        "example_request": {
+          "phone": "555-0101",
+          "dob_confirmation": "1958-02-10",
+          "has_policy_number_confirmed": true,
+          "selected_slot": { "date": "2026-07-21", "weekday": "Tue", "time": "09:00", "provider": "whitfield", "location": "maple_grove" },
+          "requested_provider": null
+        },
+        "example_success_response": {
+          "status": "booked",
+          "provider": "whitfield",
+          "duration_minutes": 15,
+          "slot": { "date": "2026-07-21", "weekday": "Tue", "time": "09:00", "provider": "whitfield", "location": "maple_grove" }
+        },
+        "example_failure_response": { "status": "not_found" },
+        "example_failure_response_alt": {
+          "status": "blocked",
+          "reason": "Riverbend Rule 8: patient has a \"Discharged from Practice\" flag; new bookings and reschedules are blocked."
+        },
+        "mapped_typescript_function": "tools/contracts/rescheduleAppointment.ts#rescheduleAppointment",
+        "adapter_note": "Same phone-to-PatientRecord adapter gap as book_appointment."
+      }
+    },
+    {
+      "name": "cancel_appointment",
+      "description": "Cancels an existing appointment. Not gated by the eligibility pipeline — a discharged patient may still cancel (D6). Only requires identity verification and an existing appointment.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": true,
+      "speak_after_execution": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string" },
+          "dob_confirmation": { "type": "string", "description": "ISO YYYY-MM-DD." }
+        },
+        "required": ["phone", "dob_confirmation"]
+      },
+      "documentation": {
+        "example_request": { "phone": "555-0110", "dob_confirmation": "1948-03-17" },
+        "example_success_response": { "status": "cancelled", "appointment_id": "appt-0110" },
+        "example_failure_response": { "status": "not_found" },
+        "mapped_typescript_function": "tools/contracts/cancelAppointment.ts#cancelAppointment",
+        "adapter_note": "Same phone-to-PatientRecord adapter gap as book_appointment."
+      }
+    },
+    {
+      "name": "confirm_appointment",
+      "description": "Reads back an existing appointment's details without modifying anything (D9). Used when the caller explicitly asks to confirm their appointment.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": false,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phone": { "type": "string" },
+          "dob_confirmation": { "type": "string", "description": "ISO YYYY-MM-DD." }
+        },
+        "required": ["phone", "dob_confirmation"]
+      },
+      "documentation": {
+        "example_request": { "phone": "555-0109", "dob_confirmation": "1995-09-09" },
+        "example_success_response": {
+          "status": "confirmed",
+          "provider": "Dr. Alan Whitfield, MD",
+          "location": "maple_grove",
+          "datetime": "2026-08-03T10:00:00"
+        },
+        "example_failure_response": { "status": "not_found" },
+        "mapped_typescript_function": "tools/contracts/confirmAppointment.ts#confirmAppointment",
+        "adapter_note": "Same phone-to-PatientRecord adapter gap as book_appointment."
+      }
+    },
+    {
+      "name": "transfer_front_desk",
+      "description": "Transfers the call to the front desk. Used for billing, human requests, annual physical requests, provider-switch requests, and anything unrecognized or unsupported.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": false,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "description": "Short reason for the transfer, for logging — not read aloud verbatim." }
+        },
+        "required": ["reason"]
+      },
+      "documentation": {
+        "example_request": { "reason": "caller asked to speak with a person" },
+        "example_success_response": { "target": "front_desk", "number": "(555) 010-2000", "reason": "caller asked to speak with a person" },
+        "example_failure_response": null,
+        "mapped_typescript_function": "tools/contracts/transferCall.ts#transferCall"
+      }
+    },
+    {
+      "name": "transfer_nurse_line",
+      "description": "Transfers the call to the nurse line / medical professional for urgent medical concerns. Never called after the agent has attempted to give medical advice — no advice is given, ever.",
+      "url": "MOCK_LOCAL_NOT_YET_HOSTED",
+      "method": "POST",
+      "speak_during_execution": false,
+      "speak_after_execution": false,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "description": "Short reason for the transfer, for logging." }
+        },
+        "required": ["reason"]
+      },
+      "documentation": {
+        "example_request": { "reason": "caller described ongoing rectal bleeding, wants clinical guidance" },
+        "example_success_response": { "target": "nurse_line", "number": "(555) 010-2911", "reason": "caller described ongoing rectal bleeding, wants clinical guidance" },
+        "example_failure_response": null,
+        "mapped_typescript_function": "tools/contracts/transferCall.ts#transferCall"
+      }
+    }
+  ]
+}

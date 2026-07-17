@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Confido Workspace | Platform Roadmap</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#004ac6",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-surface": "#191c1d",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa",
+                        "surface-bright": "#f8f9fa",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "outline": "#737686",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#d9dff5",
+                        "on-secondary-fixed-variant": "#404758",
+                        "primary-container": "#2563eb",
+                        "secondary": "#575e70",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary-fixed-variant": "#404754",
+                        "on-primary-fixed": "#00174b",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-container": "#5c6274",
+                        "on-background": "#191c1d",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "tertiary": "#4e5562",
+                        "on-tertiary-fixed": "#151c27",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#d9dadb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#dce2f7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#666d7b",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-tertiary-container": "#eaf0ff",
+                        "tertiary-fixed-dim": "#c0c7d6",
+                        "tertiary-fixed": "#dce2f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "2rem",
+                        "panel-padding": "1.5rem",
+                        "gutter": "1rem",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "code": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["18px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .roadmap-line {
+            background-image: linear-gradient(to right, #c3c6d7 1px, transparent 1px);
+            background-size: 24px 100%;
+        }
+        .dependency-connector {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E5E7EB;
+        }
+        @media (max-width: 768px) {
+            .desktop-only { display: none; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-full px-panel-padding h-16 sticky top-0 z-50 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-outline-variant dark:border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container transition-colors rounded-full">menu</button>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Confido Workspace</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface-variant desktop-only">Riverbend Gastroenterology</span>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-xs">RG</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- NavigationDrawer Shell -->
+<aside class="hidden md:flex flex-col h-full w-64 sticky left-0 top-16 p-4 gap-2 bg-surface dark:bg-surface border-r border-outline-variant dark:border-outline-variant">
+<div class="mb-6 px-2">
+<p class="font-label-md text-label-md text-primary font-bold">FDE Workspace</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Confido Workflow</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span> Overview
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span> Decomposition
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span> Inventory
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">science</span> Experiments
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span> Lifecycle
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container dark:bg-secondary-container text-on-secondary-container dark:text-on-secondary-container rounded-lg font-bold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">event_note</span> Roadmap
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span> Detail
+                </a>
+</nav>
+<div class="mt-auto px-2 pt-4 border-t border-outline-variant">
+<p class="font-label-md text-label-md text-on-surface-variant opacity-60">v2.4.0</p>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-x-hidden p-6 md:p-10 max-w-screen-2xl mx-auto w-full">
+<!-- Roadmap Header -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Platform Roadmap</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Strategic evolution of the Confido Platform. Tracking core engineering milestones from foundational identity to predictive analytics.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm">Update Timeline</button>
+<button class="bg-white border border-outline-variant text-on-surface px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors">Export Report</button>
+</div>
+</div>
+<!-- Quarter-based Roadmap Visualization (Desktop) -->
+<div class="hidden md:grid grid-cols-3 gap-8 relative pb-20">
+<!-- Vertical Connectors Overlay -->
+<svg class="dependency-connector w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<!-- Q1 to Q2 Connections -->
+<path d="M 33% 200 L 33% 200" fill="none" stroke="#004ac6" stroke-dasharray="4 4" stroke-width="2"></path>
+<!-- These are rendered as SVG paths dynamically or hardcoded for a mockup -->
+</svg>
+<!-- Q1 Foundation -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">Q1</span>
+<h2 class="font-headline-md text-headline-md text-primary">Foundations</h2>
+</div>
+<div class="space-y-4">
+<!-- Card 1: Identity -->
+<div class="glass-panel p-5 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary" id="q1-identity">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Completed</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">lock</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Identity Management</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Centralized auth and RBAC for all provider endpoints.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<!-- Card 2: Scheduling -->
+<div class="glass-panel p-5 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary" id="q1-scheduling">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">In Progress</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Advanced Scheduling</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Logic-based resource allocation and clinic slots.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<!-- Card 3: Knowledge Base -->
+<div class="glass-panel p-5 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-l-primary" id="q1-kb">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">In Progress</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">menu_book</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Knowledge Base</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Semantic search for internal protocol documentation.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Q2 Scaling -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-8 h-8 rounded-full bg-outline-variant text-on-surface-variant flex items-center justify-center font-bold text-xs">Q2</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Automation Engine</h2>
+</div>
+<div class="space-y-4">
+<!-- Card 1: Configuration Engine -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-80 border-dashed border-2 border-outline-variant" id="q2-config">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Planned</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">settings_input_component</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Configuration Engine</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Dynamic UI generation based on JSON schema.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-outline-variant h-1.5 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+<!-- Card 2: Provider Rules -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-80 border-dashed border-2 border-outline-variant" id="q2-rules">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Planned</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">rule</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Provider Rules</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Exception handling and validation logic.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-outline-variant h-1.5 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+<!-- Card 3: Escalation Engine -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-80 border-dashed border-2 border-outline-variant" id="q2-escalation">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Planned</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">priority_high</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Escalation Engine</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Automated prioritization of clinical blockers.</p>
+<div class="w-full bg-surface-container-high rounded-full h-1.5">
+<div class="bg-outline-variant h-1.5 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Q3 Intelligence -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-8 h-8 rounded-full bg-outline-variant text-on-surface-variant flex items-center justify-center font-bold text-xs">Q3</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Intelligence</h2>
+</div>
+<div class="space-y-4">
+<!-- Card 1: Analytics -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-60 grayscale border-dashed border-2 border-outline-variant" id="q3-analytics">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Backlog</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">analytics</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Real-time Analytics</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Operational dashboards and live throughput tracking.</p>
+</div>
+<!-- Card 2: Workflow Templates -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-60 grayscale border-dashed border-2 border-outline-variant" id="q3-templates">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Backlog</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">schema</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Workflow Templates</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">One-click clinic onboarding with pre-set logic.</p>
+</div>
+<!-- Card 3: Cross-clinic Insights -->
+<div class="glass-panel p-5 rounded-xl shadow-sm opacity-60 grayscale border-dashed border-2 border-outline-variant" id="q3-insights">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Backlog</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">hub</span>
+</div>
+<h3 class="font-body-lg font-bold text-on-surface mb-1">Cross-clinic Insights</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Aggregated data intelligence across the ecosystem.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mobile View (High-density list) -->
+<div class="md:hidden space-y-8">
+<div class="space-y-4">
+<h2 class="font-headline-md text-headline-md text-primary border-b border-outline-variant pb-2">Q1 Foundations</h2>
+<ul class="space-y-3">
+<li class="flex gap-4 p-4 bg-white rounded-lg shadow-sm">
+<div class="bg-green-100 text-green-700 w-10 h-10 shrink-0 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h3 class="font-body-md font-bold text-on-surface">Identity Management</h3>
+<p class="text-xs text-on-surface-variant">Centralized auth and RBAC.</p>
+</div>
+</li>
+<li class="flex gap-4 p-4 bg-white rounded-lg shadow-sm">
+<div class="bg-blue-100 text-blue-700 w-10 h-10 shrink-0 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">update</span>
+</div>
+<div>
+<h3 class="font-body-md font-bold text-on-surface">Advanced Scheduling</h3>
+<p class="text-xs text-on-surface-variant">Logic-based resource allocation.</p>
+</div>
+</li>
+<li class="flex gap-4 p-4 bg-white rounded-lg shadow-sm">
+<div class="bg-blue-100 text-blue-700 w-10 h-10 shrink-0 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">update</span>
+</div>
+<div>
+<h3 class="font-body-md font-bold text-on-surface">Knowledge Base</h3>
+<p class="text-xs text-on-surface-variant">Semantic search protocols.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Other quarters would follow similar pattern in mobile -->
+<div class="p-4 bg-surface-container rounded-xl flex items-center justify-center text-on-surface-variant font-label-md">
+                    Scroll for Q2 &amp; Q3
+                 </div>
+</div>
+<!-- Dashboard Stats / Summary Cards (Bento-ish) -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-2 glass-panel p-6 rounded-xl flex flex-col justify-center">
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase mb-4">Resource Allocation</h4>
+<div class="flex items-end gap-2 h-24">
+<div class="bg-primary-container w-full" style="height: 60%"></div>
+<div class="bg-primary w-full" style="height: 90%"></div>
+<div class="bg-primary-container w-full" style="height: 40%"></div>
+<div class="bg-outline-variant w-full" style="height: 20%"></div>
+<div class="bg-outline-variant w-full" style="height: 10%"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-md text-[10px] text-on-surface-variant">
+<span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl bg-primary text-white">
+<p class="font-label-md text-label-md opacity-80 uppercase mb-1">Roadmap Velocity</p>
+<p class="text-3xl font-bold">1.4x</p>
+<p class="font-body-sm text-body-sm mt-2 opacity-80">Surpassing Q1 targets by 12 days.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-1">Blockers</p>
+<p class="text-3xl font-bold text-error">02</p>
+<p class="font-body-sm text-body-sm mt-2 text-on-surface-variant">Critical dependencies in Q2.</p>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar Shell (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant dark:border-outline-variant shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">account_tree</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">inventory_2</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full w-12 h-12 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_note</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for drawing SVG dependencies
+        window.addEventListener('load', () => {
+            const svg = document.querySelector('.dependency-connector');
+            if (!svg) return;
+
+            const q1Scheduling = document.getElementById('q1-scheduling');
+            const q2Config = document.getElementById('q2-config');
+            const q2Rules = document.getElementById('q2-rules');
+
+            function drawLine(el1, el2) {
+                const rect1 = el1.getBoundingClientRect();
+                const rect2 = el2.getBoundingClientRect();
+                const svgRect = svg.getBoundingClientRect();
+
+                const x1 = rect1.right - svgRect.left;
+                const y1 = rect1.top + (rect1.height / 2) - svgRect.top;
+                const x2 = rect2.left - svgRect.left;
+                const y2 = rect2.top + (rect2.height / 2) - svgRect.top;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const cp1x = x1 + (x2 - x1) / 2;
+                const cp2x = x1 + (x2 - x1) / 2;
+                
+                path.setAttribute('d', `M ${x1} ${y1} C ${cp1x} ${y1}, ${cp2x} ${y2}, ${x2} ${y2}`);
+                path.setAttribute('stroke', '#c3c6d7');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-dasharray', '4 4');
+                path.classList.add('transition-all', 'duration-500');
+                
+                svg.appendChild(path);
+            }
+
+            if(q1Scheduling && q2Config) drawLine(q1Scheduling, q2Config);
+            if(q1Scheduling && q2Rules) drawLine(q1Scheduling, q2Rules);
+        });
+
+        // Hover effects to highlight dependencies
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('scale-[1.02]');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('scale-[1.02]');
+            });
+        });
+    </script>
+</body></html>

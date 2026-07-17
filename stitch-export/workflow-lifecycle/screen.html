@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Workflow Lifecycle | Confido Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#004ac6",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-surface": "#191c1d",
+                        "outline-variant": "#c3c6d7",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "surface": "#f8f9fa",
+                        "surface-bright": "#f8f9fa",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error-container": "#93000a",
+                        "outline": "#737686",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#d9dff5",
+                        "on-secondary-fixed-variant": "#404758",
+                        "primary-container": "#2563eb",
+                        "secondary": "#575e70",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary-fixed-variant": "#404754",
+                        "on-primary-fixed": "#00174b",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-container": "#5c6274",
+                        "on-background": "#191c1d",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "tertiary": "#4e5562",
+                        "on-tertiary-fixed": "#151c27",
+                        "surface-tint": "#0053db",
+                        "surface-dim": "#d9dadb",
+                        "surface-variant": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#dce2f7",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#666d7b",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-tertiary-container": "#eaf0ff",
+                        "tertiary-fixed-dim": "#c0c7d6",
+                        "tertiary-fixed": "#dce2f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "2rem",
+                        "panel-padding": "1.5rem",
+                        "gutter": "1rem",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "code": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["18px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .connector-line {
+            background: repeating-linear-gradient(90deg, #c3c6d7 0, #c3c6d7 4px, transparent 4px, transparent 8px);
+        }
+        
+        @media (max-width: 768px) {
+            .connector-line-v {
+                background: repeating-linear-gradient(180deg, #c3c6d7 0, #c3c6d7 4px, transparent 4px, transparent 8px);
+            }
+        }
+
+        .step-card:hover .step-icon {
+            transform: scale(1.1) rotate(5deg);
+            background-color: #2563eb;
+            color: white;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface flex flex-col md:flex-row min-h-screen">
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex flex-col h-full w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant z-50 p-4 gap-2">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">token</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">FDE Workspace</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Confido Workflow</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 overflow-y-auto grow">
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">account_tree</span> Decomposition
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">science</span> Experiments
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-secondary-container text-on-secondary-container rounded-lg font-bold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">account_tree</span> Lifecycle
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">event_note</span> Roadmap
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">description</span> Detail
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a senior product operations engineer in a minimalist office setting, with soft natural light and a clean architectural background. The image has a high-end corporate aesthetic with a muted color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO5-KlwC3UmHYIfXQUfeIufw8RZmQ5mRqCuCPIwczxW-c2i4vrYaKJgbelfZf6xp-gx2V-G5QUZYVJ3-5DWHhlLMVLGR_2ONwvwf0oWWbUIGsg9c_faf5zDHI8nfyUgNam58VsPs3FGKM6CkDCkcYzhtN_dCm0Dhzx2ELAQyKmRyvETIIi8RoTgixIg7Mmu9jKrW1ArUrKhSupUQdsLymf7b2S_erLRFU3x4cyr-AgyiO4884w3EyErIyPpwNLXnXDitGymQL3sAmS"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md font-bold truncate text-on-surface">Alex Riverbend</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">v2.4.0</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-panel-padding h-16 sticky top-0 z-40 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Confido Workspace</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] mr-2">location_on</span>
+                    Riverbend Gastroenterology
+                </div>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-6 md:p-8 max-w-container-max mx-auto w-full">
+<div class="mb-10">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">Workflow Lifecycle</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Visualizing the end-to-end journey from initial customer request to platform-wide adoption and continuous iteration.</p>
+</div>
+<!-- Horizontal / Vertical Scroll Container -->
+<div class="relative overflow-x-auto pb-12 hide-scrollbar">
+<!-- Lifecycle Diagram Container -->
+<div class="inline-flex md:flex flex-col md:flex-row items-center md:items-start min-w-max md:min-w-0 w-full gap-8 md:gap-0 relative">
+<!-- Step 1 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">contact_support</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Customer Request</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Initial demand signal or operational friction report.</p>
+</div>
+<!-- Connector -->
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">person_search</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">FDE</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Field Deployment Engineering discovery and scoping.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">design_services</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Workflow Prototype</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Low-fidelity validation of the proposed solution.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">verified</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Customer Validation</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Feedback loop and pilot phase verification.</p>
+</div>
+</div>
+<!-- Second Row (for complex lifecycle) -->
+<div class="inline-flex md:flex flex-col md:flex-row items-center md:items-start min-w-max md:min-w-0 w-full gap-8 md:gap-0 relative mt-12">
+<!-- Step 5 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">hub</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Pattern Recognition</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Identifying commonalities across customer cohorts.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 6 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">architecture</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Platform Proposal</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Architecting a standardized platform capability.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 7 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">rate_review</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Product Review</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Internal alignment on roadmap and feasibility.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 8 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">engineering</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Engineering</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Production-grade development and testing.</p>
+</div>
+</div>
+<!-- Third Row -->
+<div class="inline-flex md:flex flex-col md:flex-row items-center md:items-start min-w-max md:min-w-0 w-full gap-8 md:gap-0 relative mt-12">
+<!-- Step 9 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">rocket_launch</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Platform Release</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">General availability of the new workflow engine.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 10 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">settings_input_component</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Configuration</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Enabling tenant-specific logic and rulesets.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 11 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">group_add</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Adoption</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">User onboarding and migration of legacy flows.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 12 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant flex items-center justify-center text-primary transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">insights</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Metrics</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Performance tracking and ROI measurement.</p>
+</div>
+<div class="hidden md:flex flex-1 h-[2px] mt-7 connector-line min-w-[40px]"></div>
+<div class="md:hidden w-[2px] h-8 connector-line-v"></div>
+<!-- Step 13 -->
+<div class="flex flex-col items-center w-64 text-center group step-card">
+<div class="step-icon w-14 h-14 rounded-xl bg-primary-container border border-primary flex items-center justify-center text-on-primary-container transition-all duration-300 z-10 shadow-sm mb-4">
+<span class="material-symbols-outlined text-2xl">cached</span>
+</div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-1">Iteration</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant px-4">Continuous improvement based on real usage data.</p>
+</div>
+</div>
+</div>
+<!-- Dashboard Stats -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-1">Velocity Index</p>
+<h5 class="font-headline-md text-headline-md font-bold text-on-surface">4.8 Days / Stage</h5>
+</div>
+<span class="material-symbols-outlined text-primary">speed</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[72%]"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3">+12% improvement vs Q3</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-1">Adoption Rate</p>
+<h5 class="font-headline-md text-headline-md font-bold text-on-surface">94.2%</h5>
+</div>
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3">Target: 90% platform-wide</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase mb-1">Pattern Density</p>
+<h5 class="font-headline-md text-headline-md font-bold text-on-surface">18 Components</h5>
+</div>
+<span class="material-symbols-outlined text-primary">category</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[60%]"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3">Shared across 14 deployments</p>
+</div>
+</div>
+<!-- Detailed Stage Analysis (Bento-ish Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 mt-8">
+<!-- Large Feature -->
+<div class="md:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col md:flex-row">
+<div class="p-6 md:w-1/2 flex flex-col justify-center">
+<span class="inline-block px-2 py-1 bg-secondary-container text-on-secondary-container font-label-md text-[10px] uppercase rounded mb-4 w-fit">Critical Path</span>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface mb-3">Pattern Recognition Engine</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Automated identification of workflow redundancies using our proprietary vector embedding analysis. Reducing FDE discovery time by 40%.</p>
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors w-fit">View Engine Documentation</button>
+</div>
+<div class="md:w-1/2 relative min-h-[240px]">
+<img class="w-full h-full object-cover" data-alt="A sophisticated abstract visualization of data patterns and network nodes connecting in a clean, minimalist space. The aesthetic features thin blue glowing lines on a white background with subtle depth and sharp digital focus, representing systematic data analysis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO2IEm3pSVcZDOWmwavN5UGLCpXq__QaRLqmkguW1O8G8cdGO3OtpqkeFwzW2gXRYuGJNiy0mRcYKcmbuTInDjC8tPi46O3SBeMDqCse_EV2-yXusnx2d95KRloogvRNBHeiEABToitdnAjuYaUdluQ-BNIow9Mc6_5SdnkZJyNWo8pJ2nmjcO2X2XtVsKn3sCeaIjFbvh39LZ85sG0JNTBobGQ06J6UuY9uKdRrmBk06FYKVn7H2wLcdpj1XvLHQ21tPuq0XorIJ2"/>
+</div>
+</div>
+<!-- Small Callouts -->
+<div class="md:col-span-4 grid grid-rows-2 gap-6">
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex items-center gap-4">
+<div class="p-3 rounded-lg bg-surface-container-high text-primary">
+<span class="material-symbols-outlined">biotech</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Prototype Sandbox</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">4 Active experiments in pilot phase.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex items-center gap-4">
+<div class="p-3 rounded-lg bg-surface-container-high text-primary">
+<span class="material-symbols-outlined">rule</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Compliance Guard</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Validated against HIPAA/SOC2.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAB for Contextual Action -->
+<button class="fixed bottom-20 right-6 md:bottom-8 md:right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container-lowest border-t border-outline-variant shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">account_tree</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">inventory_2</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full w-12 h-12">
+<span class="material-symbols-outlined">science</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction: Smooth scrolling and active state toggle simulation
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.querySelector('.step-icon').style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.querySelector('.step-icon').style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body></html>

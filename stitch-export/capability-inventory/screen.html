@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Capability Inventory - Confido Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#004ac6",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-surface": "#191c1d",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "surface": "#f8f9fa",
+                    "surface-bright": "#f8f9fa",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary-container": "#eeefff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-error-container": "#93000a",
+                    "outline": "#737686",
+                    "surface-container-high": "#e7e8e9",
+                    "secondary-container": "#d9dff5",
+                    "on-secondary-fixed-variant": "#404758",
+                    "primary-container": "#2563eb",
+                    "secondary": "#575e70",
+                    "on-surface-variant": "#434655",
+                    "on-tertiary-fixed-variant": "#404754",
+                    "on-primary-fixed": "#00174b",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-container": "#5c6274",
+                    "on-background": "#191c1d",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#c0c6db",
+                    "tertiary": "#4e5562",
+                    "on-tertiary-fixed": "#151c27",
+                    "surface-tint": "#0053db",
+                    "surface-dim": "#d9dadb",
+                    "surface-variant": "#e1e3e4",
+                    "background": "#f8f9fa",
+                    "secondary-fixed": "#dce2f7",
+                    "surface-container-highest": "#e1e3e4",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#666d7b",
+                    "on-secondary-fixed": "#141b2b",
+                    "on-tertiary-container": "#eaf0ff",
+                    "tertiary-fixed-dim": "#c0c7d6",
+                    "tertiary-fixed": "#dce2f3",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f3f4f5",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "2rem",
+                    "panel-padding": "1.5rem",
+                    "table-cell-padding": "0.75rem 1rem",
+                    "gutter": "1rem",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "code": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-md": ["18px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col md:flex-row overflow-hidden">
+<!-- NavigationDrawer (Shared Component) -->
+<aside class="hidden md:flex flex-col h-full w-64 fixed left-0 top-0 bg-surface border-r border-outline-variant z-40 p-4 gap-2">
+<div class="flex flex-col gap-1 mb-6 px-2">
+<div class="font-headline-md text-headline-md font-bold text-primary">FDE Workspace</div>
+<div class="font-body-md text-body-md text-on-surface-variant">Confido Workflow</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto hide-scrollbar">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span>Decomposition</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container rounded-lg font-bold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+<span>Experiments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span>Lifecycle</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span>Roadmap</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Detail</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">
+                    RB
+                </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+<span class="text-[10px] text-on-surface-variant font-mono">v2.4.0</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen relative overflow-y-auto">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-panel-padding h-16 sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Confido Workspace</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex flex-col items-end">
+<span class="font-label-md text-label-md text-primary">Riverbend Gastroenterology</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Production Environment</span>
+</div>
+<button class="p-2 hover:bg-surface-container transition-colors rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-panel-padding max-w-container-max mx-auto w-full space-y-6">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-outline-variant pb-6">
+<div class="space-y-1">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-sm" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Infrastructure</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Capability Inventory</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                        A centralized registry of clinical and operational capabilities across all active Riverbend units. Track standardization status and prioritization for platform migration.
+                    </p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-white border border-outline-variant text-on-surface hover:bg-surface-container transition-colors rounded-lg flex items-center gap-2 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                        Filter
+                    </button>
+<button class="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container transition-colors rounded-lg flex items-center gap-2 font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        New Capability
+                    </button>
+</div>
+</div>
+<!-- Dashboard Stats Summary (Bento Minimal) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="p-4 bg-white border border-outline-variant rounded-xl shadow-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Total Capabilities</span>
+<div class="font-headline-lg text-headline-lg mt-1">42</div>
+<div class="mt-2 text-xs text-green-600 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                        +4 this month
+                    </div>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded-xl shadow-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Standardized</span>
+<div class="font-headline-lg text-headline-lg mt-1">28%</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-3">
+<div class="bg-primary h-1 rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded-xl shadow-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Pending Review</span>
+<div class="font-headline-lg text-headline-lg mt-1">12</div>
+<div class="mt-2 text-xs text-amber-600 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="priority_high">priority_high</span>
+                        Needs attention
+                    </div>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded-xl shadow-sm">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Active Owners</span>
+<div class="font-headline-lg text-headline-lg mt-1">18</div>
+<div class="mt-2 flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-white bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border border-white bg-slate-300"></div>
+<div class="w-6 h-6 rounded-full border border-white bg-slate-400"></div>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant sticky top-0">
+<tr>
+<th class="px-6 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Capability</th>
+<th class="px-6 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Current Clinics</th>
+<th class="px-6 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Standardize?</th>
+<th class="px-6 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Priority</th>
+<th class="px-6 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Owner</th>
+<th class="px-6 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-blue-50 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Identity Verification</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Auth0 / Clinical SSO</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface">14 Locations</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+<span class="w-1 h-1 bg-green-500 rounded-full mr-1.5"></span>
+                                        Completed
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-label-md text-label-md text-on-surface-variant">P1</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-purple-50 text-purple-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Scheduling</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Cross-clinic Orchestration</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface">8 Locations</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+<span class="w-1 h-1 bg-blue-500 rounded-full mr-1.5"></span>
+                                        In Progress
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-label-md text-label-md text-on-surface-variant">P1</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Marcus Thorne</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-amber-50 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Knowledge Base</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Internal Documentation</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface">22 Locations</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+<span class="w-1 h-1 bg-amber-500 rounded-full mr-1.5"></span>
+                                        Discovery
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-label-md text-label-md text-on-surface-variant">P2</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Elena Rodriguez</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-red-50 text-red-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="priority_high">priority_high</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Escalation</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Critical Care Protocol</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface">6 Locations</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-outline-variant">
+<span class="w-1 h-1 bg-slate-500 rounded-full mr-1.5"></span>
+                                        Not Started
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-label-md text-label-md text-on-surface-variant">P3</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Alex Kim</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Insurance Validation</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Real-time Eligibility</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-body-md text-on-surface">11 Locations</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+<span class="w-1 h-1 bg-blue-500 rounded-full mr-1.5"></span>
+                                        In Progress
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-label-md text-label-md text-on-surface-variant">P1</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="font-body-sm text-body-sm text-on-surface">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 5 of 42 capabilities</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container transition-colors font-label-md text-label-md">Previous</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container transition-colors font-label-md text-label-md">Next</button>
+</div>
+</div>
+</div>
+<!-- Visualization / Insight Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-6 bg-white border border-outline-variant rounded-xl shadow-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Migration Velocity</h3>
+<div class="h-48 flex items-end gap-2">
+<div class="flex-1 bg-primary/20 rounded-t h-[30%] hover:bg-primary/40 transition-all cursor-help relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">JAN</div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t h-[45%] hover:bg-primary/40 transition-all cursor-help relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">FEB</div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t h-[40%] hover:bg-primary/40 transition-all cursor-help relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">MAR</div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t h-[60%] hover:bg-primary/40 transition-all cursor-help relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">APR</div>
+</div>
+<div class="flex-1 bg-primary h-[85%] hover:bg-primary-container transition-all cursor-help relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">MAY (Current)</div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-4">Platform standardization is accelerating since the v2.4 rollout. Efficiency up 22% QoQ.</p>
+</div>
+<div class="p-6 bg-white border border-outline-variant rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Platform Coverage</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Estimated operational risk reduction once P1 items are standardized.</p>
+</div>
+<div class="space-y-4 my-6">
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span>Clinical Compliance</span>
+<span class="text-primary">92%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[92%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-medium">
+<span>Identity Security</span>
+<span class="text-primary">84%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-lg font-label-md text-label-md text-on-surface">
+                        View Detailed Audit
+                    </button>
+</div>
+</div>
+</div>
+<!-- Spacer for BottomNavBar -->
+<div class="h-16 md:hidden"></div>
+</main>
+<!-- BottomNavBar (Shared Component) - Mobile Only -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container-lowest border-t border-outline-variant rounded-t-xl shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full w-12 h-12 scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12" href="#">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant w-12 h-12" href="#">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.cursor = 'pointer';
+            });
+        });
+
+        // Toggle active navigation drawer styles if needed
+        // (Handled via static assignment in the template per instructions)
+    </script>
+</body></html>
