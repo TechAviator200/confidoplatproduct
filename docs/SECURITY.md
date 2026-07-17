@@ -2,7 +2,7 @@
 
 ## Why an HTTP adapter exists at all
 
-Retell's custom-function runtime requires a publicly reachable HTTP endpoint — it
+Retell's custom-function runtime requires a publicly reachable HTTP endpoint and it
 cannot call a local TypeScript function directly. The Express adapter in `server/`
 was created specifically to satisfy this constraint. Its only job is to give Retell
 something to POST to; the actual Riverbend scheduling rules remain in
