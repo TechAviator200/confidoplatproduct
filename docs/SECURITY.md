@@ -78,6 +78,3 @@ here is:
   additive change, not a rewrite.
 - Document the gap explicitly so it is never mistaken for an accepted production
   posture.
-
-Nothing in this architecture should be used as a template for deploying a voice agent
-that handles real patient data.
