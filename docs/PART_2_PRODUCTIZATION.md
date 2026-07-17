@@ -158,9 +158,9 @@ The original Stitch design prototypes (in `stitch-export/`) served as the visual
 Every clinic engagement produces a decision log (DECISIONS.md), a source map (SOURCE_MAP.md), test evidence (TEST_CALL_SCRIPT.md), and a working implementation. The question for the platform team is: which parts of that implementation are worth generalizing, and what evidence threshold justifies the investment?
 
 Riverbend shows:
-1. A deterministic policy engine (5 validators) is a strong candidate for platform extraction — but only once a second clinic's rules are compared.
-2. Identity verification (phone + DOB) is likely universal — but the pattern needs one more clinic to confirm.
-3. Provider-specific exceptions (Crane/Mendez) are clearly clinic-specific — the right platform answer is an exception isolation pattern, not a new capability.
-4. The FDE operating model (discovery → evidence → review → platform decision) is already working — it just needs to be codified before the next engagement.
+1. A deterministic policy engine (5 validators) is a strong candidate for platform extraction, but only once a second clinic's rules are compared.
+2. Identity verification (phone + DOB) is likely universal, the pattern needs one more clinic to confirm.
+3. Provider-specific exceptions (Crane/Mendez) are clearly clinic-specific, which means the right platform answer is an exception isolation pattern, not a new capability.
+4. The FDE operating model (discovery → evidence → review → platform decision) is already working, it just needs to be additional operational structture regarding tailored experiments and platform workflows.
 
 The Part 2 workspace is designed to support that operating model by making the evidence visible, structured, and reviewable by platform stakeholders who were not present during the FDE engagement.
