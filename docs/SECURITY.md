@@ -30,8 +30,8 @@ pattern; the remaining eight were added as each workflow was verified.
 |---|---|
 | Authentication | None — any HTTP client can call the endpoints |
 | Data | 100% synthetic mock data; no PHI |
-| Transport | Temporary ngrok tunnel; URL not committed to any file |
-| Network exposure | Public internet for duration of demo session only |
+| Transport | Deployed on Render (`confidoplatproduct.onrender.com`); ngrok used only for local Retell testing |
+| Network exposure | Public internet; no IP allowlist |
 | Secrets | Retell API key set at runtime only; never committed to source |
 | Logging | Console only; no audit trail |
 
