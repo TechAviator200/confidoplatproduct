@@ -57,7 +57,7 @@ A production deployment of this service would need, at minimum:
 | Environment isolation | Separate dev / staging / production environments; no synthetic or test data in production |
 | Monitoring and alerting | Uptime, error rates, and anomalous access patterns monitored in real time |
 | HIPAA-aligned safeguards | Business Associate Agreement with hosting and infrastructure providers; encryption at rest and in transit; breach notification procedures |
-| Managed deployment | The ngrok tunnel replaced by a hosted service with a stable owned domain and valid TLS certificate |
+| Managed deployment | Managed production deployment: Move from the current demo service to a stable, production-controlled environment with an owned domain, hardened TLS, environment isolation, and compliance-aligned infrastructure.|
 
 In practice, the thin adapter pattern chosen here makes this migration
 straightforward: authentication, authorization, and rate limiting can be added at
@@ -68,8 +68,7 @@ the transport layer (`server/`) without touching any business logic in
 
 ## Summary
 
-The unauthenticated endpoints and temporary tunnel reflect a deliberate demo
-transport decision, not a production design recommendation. The engineering judgment
+The unauthenticated demo endpoints reflect a deliberate transport decision for synthetic data, not a production design recommendation. Ngrok was used only during local integration testing, while the current demo API is deployed on Render.The engineering judgment
 here is:
 
 - Expose the minimal surface area needed to demonstrate the integration (two initial
