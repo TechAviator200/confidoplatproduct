@@ -39,7 +39,7 @@ Caller (spoken response)
 
 ### LLM handles conversation; validators handle rules
 
-The fundamental design decision is that the LLM never asserts a scheduling outcome —
+The fundamental design decision is that the LLM never asserts a scheduling outcome 
 it only collects the inputs required for a tool call, then faithfully relays what the
 tool returns. This isn't a prompt constraint; it's structural. The LLM has no other
 source for eligibility information in the conversation, so it cannot fabricate one.
@@ -158,7 +158,7 @@ configuration changes.
 
 No tool call. The system prompt includes a scripted instruction: "If this is a
 medical emergency, please hang up and dial 911 now." This is the only agent behavior
-that doesn't delegate to a tool — it must be reachable instantly, from any point in
+that doesn't delegate to a tool and it must be reachable instantly, from any point in
 the conversation, with zero latency.
 
 ---
